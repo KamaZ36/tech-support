@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+
+  bot:
+    container_name: bot
+    build: bot
+    restart: on-failure
+    env_file:
+      - bot/.env
+    depends_on:
+      - redis
+      - postgres
+    ports:
+      - "3001:3001"
+
+  postgres:
+    hostname: postgres
+    container_name: postgres
+    image: postgres:16.2
+    restart: on-failure
+    env_file:
+      - bot/.env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./services/postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    container_name: redis
+    image: redis:7.2
+    restart: on-failure
+    volumes:
+      - ./services/redis_data:/data
+    ports:
+      - "6379:6379"
+
+  pgadmin:
+    container_name: pgadmin
+    image: elestio/pgadmin:latest
+    restart: on-failure
+    # ПРИУДМЫВАЕМ СВОИ ДАННЫЕ ДЛЯ ВХОДА В PgAdmin, чтобы заработало, нужно настроить проксирование на хостинге на адрес 'pgadmin:8080'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "test@mail.ru"  # Ваш email
+      PGADMIN_DEFAULT_PASSWORD: "test"  # Придумайте пароль
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./services/pg-admin/servers.json:/pgadmin4/servers.json
