@@ -5,7 +5,7 @@ from aiogram.types.callback_query import CallbackQuery
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.commands.questions import get_answer_text
+from database.commands.questions import get_question_by_tg_id
 
 from keyboards.inline.user.questions_answers import get_questions_answers
 from keyboards.inline.user.start_keyboards import start_keyboards
@@ -30,8 +30,11 @@ async def show_base_questions(callback: CallbackQuery, state: FSMContext, sessio
 async def show_base_answer(callback: CallbackQuery, state: FSMContext, session: AsyncSession) -> None:
     await state.set_state(User.question)
     answer_id = int(callback.data.split('_')[-1])
-    answer_text = await get_answer_text(session=session, answer_id=answer_id)
-    await callback.message.edit_text(answer_text, reply_markup=await back_to_questions_list())
+    question = await get_question_by_tg_id(session=session, answer_id=answer_id)
+    await callback.message.edit_text(
+        f'Вопрос: {question.question}\nОтвет: {question.answer}',
+        reply_markup=await back_to_questions_list()
+    )
 
 
 @router.callback_query(StateFilter(User.questions_answers, User.contacts), F.data == 'back_main_in_questions')

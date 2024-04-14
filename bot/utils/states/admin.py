@@ -12,3 +12,7 @@ class AddNewQuestion(StatesGroup):
 
 class DeleteQuestion(StatesGroup):
     waiting_question_id: State = State()
+
+
+class EditContacts(StatesGroup):
+    waiting_contact_title: State = State()

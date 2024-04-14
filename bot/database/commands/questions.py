@@ -15,11 +15,11 @@ async def get_keyboards(session: AsyncSession) -> Sequence[Question] | bool:
     return keyboards
 
 
-async def get_answer_text(session: AsyncSession, answer_id: int) -> str:
-    query = select(Question.answer).where(Question.id == answer_id)
+async def get_question_by_tg_id(session: AsyncSession, answer_id: int) -> Question | None:
+    query = select(Question).where(Question.id == answer_id)
     response = await session.execute(query)
-    answer_text = response.scalar()
-    return answer_text
+    question = response.scalars().first()
+    return question
 
 
 async def add_keyboard(session: AsyncSession, data: dict[str, Any]) -> None:

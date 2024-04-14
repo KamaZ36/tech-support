@@ -18,7 +18,7 @@ from database.engine import create_database_pool
 from settings import settings
 
 from handlers.user import question_answer, base
-from handlers.admin import admin, add_new_question, get_list_question, delete_question
+from handlers.admin import admin, add_new_question, get_list_question, delete_question, edit_contacts
 from handlers.user import contacts
 
 
@@ -39,7 +39,8 @@ def main():
         add_new_question.router,
         get_list_question.router,
         delete_question.router,
-        contacts.router
+        contacts.router,
+        edit_contacts.router
     )
     dp.update.middleware(DataBaseSession(session_pool))
     dp.message.middleware(ThrottlingMiddleware(settings.throttle_time_spin, settings.throttle_time_other))

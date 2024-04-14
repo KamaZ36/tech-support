@@ -15,6 +15,9 @@ async def get_admin_panel() -> InlineKeyboardMarkup:
             InlineKeyboardButton(text="Список вопросов", callback_data='get_list_question')
         ],
         [
+            InlineKeyboardButton(text="Редактировать контакты", callback_data='edit_contact_button')
+        ],
+        [
             InlineKeyboardButton(text='Выйти', callback_data='cancel_admin_panel')
         ]
     ]
